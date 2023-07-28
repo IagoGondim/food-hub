@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 
 class LoginViewModel : ViewModel() {
   
-  private val  TAG = LoginViewModel::class.simpleName
+  private val TAG = LoginViewModel::class.simpleName
   
   var registrationUIState = mutableStateOf(RegistrationUIState())
   
@@ -42,11 +42,20 @@ class LoginViewModel : ViewModel() {
         printState()
       }
       
+      is UIEvent.RegisterButtonClicked -> {
+        signUp()
+      }
       
     }
   }
   
-  private fun printState(){
+  private fun signUp() {
+    Log.d(TAG, "Inside_signUp")
+    printState()
+    
+  }
+  
+  private fun printState() {
     Log.d(TAG, "Inside_printState")
     Log.d(TAG, registrationUIState.value.toString())
   }

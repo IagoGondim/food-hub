@@ -217,8 +217,8 @@ fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit) {
 @Composable
 fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
   val initialText = "By continuing you accept our "
-  val privacyPolicyText = "Privacy Policy "
-  val andText = "and "
+  val privacyPolicyText = "Privacy Policy"
+  val andText = " and "
   val termsAndConditionsText = "Term of Use"
   
   val annotatedString = buildAnnotatedString {
@@ -243,20 +243,20 @@ fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
         if ((span.item == termsAndConditionsText) || (span.item == privacyPolicyText)) {
           onTextSelected(span.item)
         }
-        
-        
       }
     
   })
 }
 
 @Composable
-fun ButtonComponent(value: String) {
+fun ButtonComponent(value: String, onButtonClicked: () -> Unit) {
   Button(
-    onClick = { },
     modifier = Modifier
       .fillMaxWidth()
       .heightIn(48.dp),
+    onClick = {
+      onButtonClicked.invoke()
+    },
     contentPadding = PaddingValues(),
     colors = ButtonDefaults.buttonColors(Color.Transparent)
   ) {
