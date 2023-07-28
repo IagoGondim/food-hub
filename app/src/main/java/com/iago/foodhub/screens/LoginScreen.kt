@@ -47,11 +47,17 @@ fun LoginScreen() {
       
       MyTextFieldComponent(
         labelValue = stringResource(id = R.string.email),
-        painterResource = painterResource(id = R.drawable.email)
+        painterResource = painterResource(id = R.drawable.email),
+        onTextSelected = {
+        
+        }
       )
       PasswordTextFieldComponent(
         labelValue = stringResource(id = R.string.password),
-        painterResource = painterResource(id = R.drawable.lock)
+        painterResource = painterResource(id = R.drawable.lock),
+        onTextSelected = {
+        
+        }
       )
       
       Spacer(modifier = Modifier.height(30.dp))
