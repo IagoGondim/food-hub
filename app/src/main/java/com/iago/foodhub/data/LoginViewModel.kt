@@ -3,6 +3,7 @@ package com.iago.foodhub.data
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.iago.foodhub.data.rules.Validator
 
 
 class LoginViewModel : ViewModel() {
@@ -12,6 +13,7 @@ class LoginViewModel : ViewModel() {
   var registrationUIState = mutableStateOf(RegistrationUIState())
   
   fun onEvent(event: UIEvent) {
+    validateDateWithRules()
     when (event) {
       is UIEvent.FirstNameChanged -> {
         registrationUIState.value = registrationUIState.value.copy(
@@ -32,6 +34,7 @@ class LoginViewModel : ViewModel() {
           email = event.email
         )
         printState()
+  
       }
       
       
@@ -52,6 +55,37 @@ class LoginViewModel : ViewModel() {
   private fun signUp() {
     Log.d(TAG, "Inside_signUp")
     printState()
+    
+    validateDateWithRules()
+    
+  }
+  
+  private fun validateDateWithRules() {
+    val fNameResult = Validator.validateFirstName(
+      fName = registrationUIState.value.firstName
+    )
+    val lNameResult = Validator.validateLastName(
+      lName = registrationUIState.value.lastName
+    )
+    val emailResult = Validator.validateEmail(
+      email = registrationUIState.value.email
+    )
+    val passwordResult = Validator.validatePassword(
+      password = registrationUIState.value.password
+    )
+    
+    Log.d(TAG, "Inside_validateDateWithRules")
+    Log.d(TAG, "fNameResult = $fNameResult")
+    Log.d(TAG, "lNameResult= $lNameResult")
+    Log.d(TAG, "emailResult = $emailResult")
+    Log.d(TAG, "passwordResult = $passwordResult")
+  
+    registrationUIState.value = registrationUIState.value.copy(
+      firstNameError = fNameResult.status,
+      lastNameError = lNameResult.status,
+      emailError =  emailResult.status,
+      passwordError = passwordResult.status
+    )
     
   }
   

@@ -90,7 +90,8 @@ fun HeadingTextComponent(value: String) {
 @Composable
 fun MyTextFieldComponent(
   labelValue: String, painterResource: Painter,
-  onTextSelected: (String) -> Unit
+  onTextSelected: (String) -> Unit,
+  errorStatus: Boolean = false
 ) {
   
   val textValue = remember {
@@ -119,7 +120,7 @@ fun MyTextFieldComponent(
     leadingIcon = {
       Icon(painter = painterResource, contentDescription = "")
     },
-    
+    isError = !errorStatus
     )
 }
 
@@ -128,7 +129,9 @@ fun MyTextFieldComponent(
 fun PasswordTextFieldComponent(
   labelValue: String,
   painterResource: Painter,
-  onTextSelected: (String) -> Unit
+  onTextSelected: (String) -> Unit,
+  errorStatus: Boolean = false
+
 ) {
   
   val localFocusManager = LocalFocusManager.current
@@ -189,6 +192,7 @@ fun PasswordTextFieldComponent(
       }
     },
     visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+    isError = !errorStatus
   )
 }
 
@@ -212,6 +216,7 @@ fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit) {
     ClickableTextComponent(value = value, onTextSelected)
     
   }
+  
 }
 
 @Composable
