@@ -3,95 +3,89 @@ package com.iago.foodhub.data
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.iago.foodhub.data.rules.Validator
+import com.iago.foodhub.navigation.FoodHubAppRouter
+import com.iago.foodhub.navigation.Screen
 
 
 class LoginViewModel : ViewModel() {
   
   private val TAG = LoginViewModel::class.simpleName
   
-  var registrationUIState = mutableStateOf(RegistrationUIState())
+  var loginUIState = mutableStateOf(LoginUIState())
   
-  fun onEvent(event: UIEvent) {
-    validateDateWithRules()
+  var allValidationsPassed = mutableStateOf(false)
+  
+  var loginInProgress = mutableStateOf(false)
+  
+  
+  fun onEvent(event: LoginUIEvent) {
     when (event) {
-      is UIEvent.FirstNameChanged -> {
-        registrationUIState.value = registrationUIState.value.copy(
-          firstName = event.firstName
-        )
-        printState()
-      }
-      
-      is UIEvent.LastNameChanged -> {
-        registrationUIState.value = registrationUIState.value.copy(
-          lastName = event.lastName
-        )
-        printState()
-      }
-      
-      is UIEvent.EmailChanged -> {
-        registrationUIState.value = registrationUIState.value.copy(
+      is LoginUIEvent.EmailChanged -> {
+        loginUIState.value = loginUIState.value.copy(
           email = event.email
         )
-        printState()
-  
       }
       
-      
-      is UIEvent.PasswordChanged -> {
-        registrationUIState.value = registrationUIState.value.copy(
+      is LoginUIEvent.PasswordChanged -> {
+        loginUIState.value = loginUIState.value.copy(
           password = event.password
         )
-        printState()
       }
       
-      is UIEvent.RegisterButtonClicked -> {
-        signUp()
+      is LoginUIEvent.LoginButtonClicked -> {
+        login()
       }
-      
     }
+    validateLoginUIDataWithRules()
   }
   
-  private fun signUp() {
-    Log.d(TAG, "Inside_signUp")
-    printState()
-    
-    validateDateWithRules()
-    
-  }
-  
-  private fun validateDateWithRules() {
-    val fNameResult = Validator.validateFirstName(
-      fName = registrationUIState.value.firstName
-    )
-    val lNameResult = Validator.validateLastName(
-      lName = registrationUIState.value.lastName
-    )
+  private fun validateLoginUIDataWithRules() {
     val emailResult = Validator.validateEmail(
-      email = registrationUIState.value.email
-    )
-    val passwordResult = Validator.validatePassword(
-      password = registrationUIState.value.password
+      email = loginUIState.value.email
     )
     
-    Log.d(TAG, "Inside_validateDateWithRules")
-    Log.d(TAG, "fNameResult = $fNameResult")
-    Log.d(TAG, "lNameResult= $lNameResult")
-    Log.d(TAG, "emailResult = $emailResult")
-    Log.d(TAG, "passwordResult = $passwordResult")
-  
-    registrationUIState.value = registrationUIState.value.copy(
-      firstNameError = fNameResult.status,
-      lastNameError = lNameResult.status,
-      emailError =  emailResult.status,
+    
+    val passwordResult = Validator.validatePassword(
+      password = loginUIState.value.password
+    )
+    
+    loginUIState.value = loginUIState.value.copy(
+      emailError = emailResult.status,
       passwordError = passwordResult.status
     )
     
+    allValidationsPassed.value = emailResult.status && passwordResult.status
+    
   }
   
-  private fun printState() {
-    Log.d(TAG, "Inside_printState")
-    Log.d(TAG, registrationUIState.value.toString())
+  private fun login() {
+    
+    loginInProgress.value = true
+    val email = loginUIState.value.email
+    val password = loginUIState.value.password
+    
+    FirebaseAuth
+      .getInstance()
+      .signInWithEmailAndPassword(email, password)
+      .addOnCompleteListener {
+        Log.d(TAG, "Inside_login_success")
+        Log.d(TAG, "${it.isSuccessful}")
+        
+        if (it.isSuccessful) {
+          loginInProgress.value = false
+          FoodHubAppRouter.navigateTo(Screen.HomeScreen)
+        }
+      }
+      .addOnFailureListener {
+        Log.d(TAG, "Inside_login_failure")
+        Log.d(TAG, "${it.localizedMessage}")
+        
+        loginInProgress.value = false
+        
+      }
+    
   }
   
 }

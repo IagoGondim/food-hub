@@ -8,10 +8,11 @@ sealed class Screen {
   object SignUpScreen : Screen()
   object TermsAndConditionsScreen : Screen()
   object LoginScreen : Screen()
+  object HomeScreen : Screen()
 }
 
 object  FoodHubAppRouter{
-  val currentScreen : MutableState<Screen> = mutableStateOf(Screen.SignUpScreen)
+  var currentScreen: MutableState<Screen> = mutableStateOf(Screen.SignUpScreen)
   
   fun navigateTo(destination : Screen){
     currentScreen.value = destination

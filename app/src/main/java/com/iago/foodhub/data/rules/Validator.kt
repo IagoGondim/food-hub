@@ -2,16 +2,17 @@ package com.iago.foodhub.data.rules
 
 object Validator {
   
+  
   fun validateFirstName(fName: String): ValidationResult {
     return ValidationResult(
-      (!fName.isNullOrEmpty() && fName.length >= 6)
+      (!fName.isNullOrEmpty() && fName.length >= 2)
     )
     
   }
   
   fun validateLastName(lName: String): ValidationResult {
     return ValidationResult(
-      (!lName.isNullOrEmpty() && lName.length >= 4)
+      (!lName.isNullOrEmpty() && lName.length >= 2)
     )
   }
   
@@ -26,6 +27,13 @@ object Validator {
       (!password.isNullOrEmpty() && password.length >= 4)
     )
   }
+  
+  fun validatePrivacyPolicyAcceptance(statusValue:Boolean):ValidationResult{
+    return ValidationResult(
+      statusValue
+    )
+  }
+  
 }
 
 data class ValidationResult(

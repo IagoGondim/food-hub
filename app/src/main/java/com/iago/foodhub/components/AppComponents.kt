@@ -90,7 +90,7 @@ fun HeadingTextComponent(value: String) {
 @Composable
 fun MyTextFieldComponent(
   labelValue: String, painterResource: Painter,
-  onTextSelected: (String) -> Unit,
+  onTextChanged: (String) -> Unit,
   errorStatus: Boolean = false
 ) {
   
@@ -115,13 +115,13 @@ fun MyTextFieldComponent(
     maxLines = 1,
     onValueChange = {
       textValue.value = it
-      onTextSelected(it)
+      onTextChanged(it)
     },
     leadingIcon = {
       Icon(painter = painterResource, contentDescription = "")
     },
     isError = !errorStatus
-    )
+  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -129,7 +129,7 @@ fun MyTextFieldComponent(
 fun PasswordTextFieldComponent(
   labelValue: String,
   painterResource: Painter,
-  onTextSelected: (String) -> Unit,
+  onTextChanged: (String) -> Unit,
   errorStatus: Boolean = false
 
 ) {
@@ -167,7 +167,7 @@ fun PasswordTextFieldComponent(
     value = password.value,
     onValueChange = {
       password.value = it
-      onTextSelected(it)
+      onTextChanged(it)
     },
     leadingIcon = {
       Icon(painter = painterResource, contentDescription = "")
@@ -197,7 +197,7 @@ fun PasswordTextFieldComponent(
 }
 
 @Composable
-fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit) {
+fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit, onCheckedChange :(Boolean)-> Unit) {
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -208,16 +208,17 @@ fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit) {
     val checkedState = remember {
       mutableStateOf(false)
     }
+    
     Checkbox(checked = checkedState.value,
       onCheckedChange = {
-        checkedState.value != checkedState.value
+        checkedState.value = !checkedState.value
+        onCheckedChange.invoke(it)
       })
     
     ClickableTextComponent(value = value, onTextSelected)
-    
   }
-  
 }
+
 
 @Composable
 fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
@@ -254,7 +255,7 @@ fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
 }
 
 @Composable
-fun ButtonComponent(value: String, onButtonClicked: () -> Unit) {
+fun ButtonComponent(value: String, onButtonClicked: () -> Unit, isEnabled: Boolean = false) {
   Button(
     modifier = Modifier
       .fillMaxWidth()
@@ -263,7 +264,9 @@ fun ButtonComponent(value: String, onButtonClicked: () -> Unit) {
       onButtonClicked.invoke()
     },
     contentPadding = PaddingValues(),
-    colors = ButtonDefaults.buttonColors(Color.Transparent)
+    colors = ButtonDefaults.buttonColors(Color.Transparent),
+    shape = RoundedCornerShape(50.dp),
+    enabled = isEnabled
   ) {
     Box(
       modifier = Modifier

@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.iago.foodhub.navigation.FoodHubAppRouter
 import com.iago.foodhub.navigation.Screen
+import com.iago.foodhub.screens.HomeScreen
 import com.iago.foodhub.screens.LoginScreen
 import com.iago.foodhub.screens.SignUpScreen
 import com.iago.foodhub.screens.TermsAndConditionsScreen
@@ -18,6 +19,7 @@ fun FoodHubApp() {
     modifier = Modifier.fillMaxSize(),
     color = Color.White
   ) {
+    
     Crossfade(targetState = FoodHubAppRouter.currentScreen) { currentState ->
       when (currentState.value) {
         is Screen.SignUpScreen -> {
@@ -31,8 +33,12 @@ fun FoodHubApp() {
         is Screen.LoginScreen -> {
           LoginScreen()
         }
+        
+        is Screen.HomeScreen -> {
+          HomeScreen()
+        }
       }
-      
     }
+    
   }
 }
